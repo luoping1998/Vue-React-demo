@@ -1,0 +1,36 @@
+body{
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#pay{
+	width: 90%;
+	margin: 10px auto;
+	height: auto;
+	border: 1px solid black;
+}
+
+#pay table{
+	width: 100%;
+	height: auto;
+}
+
+#pay table tr{
+	height: 30px;
+	line-height: 30px;
+}
+
+#pay .small{
+	width: 100px;
+}
+
+#pay button{
+	border:lightgray 1px solid;
+	background-color: white;
+	box-shadow: none;
+}
+
+#pay img{
+	width: 60px;
+}

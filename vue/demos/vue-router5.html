@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router4</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<script type="text/javascript" src="../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-link to="/">Go /</router-link>
+		<router-link to="/user">Go user</router-link>
+		<router-view></router-view>
+		<router-view name="b"></router-view>
+		<router-view name="a"></router-view>
+	</div>
+</body>
+<script type="text/javascript">
+	const Foo = { template : '<h1>FOO</h1>'}
+	const Bar = { template : '<h1>BAR</h1>'}
+	const Baz = { template : '<h1>BAZ</h1>'}
+
+	const Foo2 = { template : '<h1>2</h1>'}
+	const Bar3 = { template : '<h1>3</h1>'}
+	const Baz4 = { template : '<h1>4</h1>'}
+
+	const router = new VueRouter({
+		routes : [
+			{
+				path:'/',
+				components : {
+					default : Foo,
+					a : Bar,
+					b : Baz
+				}
+			},{
+				path:'/user',
+				components : {
+					default : Foo2,
+					a : Bar3,
+					b : Baz4
+				}
+			}
+		]
+	})
+
+	new Vue({
+		router
+	}).$mount('#app')
+</script>
+</html>

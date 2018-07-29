@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router3</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<script type="text/javascript" src="../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-link :to="{ name :'user', params : { useId : 123 } }">GO 123</router-link>
+		<router-view></router-view>
+	</div>
+</body>
+<script type="text/javascript">
+	const User = {template:'<h1>USER</h1>'}
+
+	const router = new VueRouter({
+		routes:[
+			{
+				path:'/user/:userId',
+				name:'user',
+				component:User
+			}
+		]
+	})
+
+	new Vue({
+		router
+	}).$mount('#app')
+
+</script>
+</html>

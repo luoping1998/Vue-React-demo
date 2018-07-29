@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue7</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+	<p>{{all}}</p>
+	<!-- 可以理解为为example注册了一个fatherCount事件 ，当该事件被触发时会调用addCount函数-->
+	<example v-on:fathercount="addCount"></example>	
+	<example v-on:fathercount="addCount"></example>
+</div>
+
+</body>
+<script type="text/javascript">
+	Vue.component('example',{
+	//为example的子组件注册了click事件，当触发时会调用其组件自己的方法childCount
+		template:'<button v-on:click="childCount">{{count}}</button>',
+		data:function(){
+			return {
+				count:0
+			};
+		},
+		methods:{
+			childCount:function(){
+				this.count++;
+				//当该方法触发时 会触发fatherCount事件
+				this.$emit('fathercount');
+			}
+		}
+	})
+
+	new Vue({
+		el:'#app',
+		data:{
+			all:0
+		},
+		methods:{
+			addCount:function(){
+				this.all++;
+			}
+		}
+	})
+</script>
+</html>

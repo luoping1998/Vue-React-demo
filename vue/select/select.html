@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>select</title>
+	<link rel="stylesheet" type="text/css" href="./select.css">
+	<script type="text/javascript" src="../../vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div class="selBody">
+			<h2>select 1</h2>
+			<tosearch :val="val" @toshow="show"></tosearch>
+			<sellist :list="list" @getindex="toSel"></sellist>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	Vue.component('tosearch',{
+		props:["val"],
+		template:'<div>\
+						<input type="text" :value="val">\
+						<button @click="tosearch(val)">show</button>\
+					</div>',
+		methods:{
+			tosearch:function(v){
+				this.$emit('toshow',{
+					'showData':v
+				})
+			}
+		}
+	});
+
+	Vue.component('sellist',{
+		props:["list"],
+		template:'<ul>\
+					<li @click="toUp(index)" v-for="(item,index) in list">{{item}}</li>\
+				 </ul>',
+		methods:{
+			toUp:function(index){
+				console.log(index);
+				this.$emit('getindex',{
+					'index' : index
+				})
+			}
+		}
+	})
+
+	new Vue({
+		el:'#app',
+		data:{
+			list:[1,2,3,4,5,6],
+			val:''
+		},
+		methods:{
+			toSel:function(obj){
+				console.log(obj);
+				this.val = this.list[obj.index];
+			},
+			show:function(v){
+				alert(v.showData);
+			}
+		}
+	})
+</script>
+</html>

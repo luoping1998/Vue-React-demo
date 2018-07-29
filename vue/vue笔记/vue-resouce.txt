@@ -1,0 +1,105 @@
+vue做交互：
+
+1.全局Vue实例：
+Vue.http.get('someUrl',[config]).then(sucCallback,errCallback);
+Vue.http.post('someUrl',[body],[config]).then(sucCallback,errCallback);
+
+2.在Vue实例methods内部使用：
+this.$http.get('someUrl',[config]).then(sucCallback,errCallback);
+this.$http.post('someUrl',[body],[config]).then(sucCallback,errCallback);
+
+config 
+参数：
+1)url : 请求发送的url
+2)body : 请求发送的数据
+3)headers : 发送的请求头
+4)params : 作为url发送的参数对象
+5)method : http方式
+6)resposeType : 响应的方式（text,blob,json...）
+7)timeout : 限时
+8)credentials : 
+9)emulateHTTP : 模拟HTTP Boolean值
+10)emulateJSON : 模拟JSON Boolean值
+11)before : 在请求发送之前执行的函数
+12)uploadProgress : 用来处理上传的函数
+13)downloadProgress : 用来处理卸载的函数
+
+response 
+属性：
+1)url:res url
+2)body:响应数据主体
+3)headers：响应头
+4)ok：状态码是否在200~299之间
+5)status：状态码
+6)statusText：状态
+
+方法：
+1）text() 将res.body 转化成string
+2）json() 将res.body 转化成JSON
+3）blob() 将res.body 转化成Blob 对象
+
+get:
+	获取一个普通文本：
+	<button @click="show">get</button>
+	new Vue({
+		el:'#app',
+		data:{
+			//...
+		},
+		methods:{
+			get:function(){
+				this.$http.get('url').then(function(res){
+					alert(res.data);
+				},function(res){
+					alert(res.status);
+				})
+			}
+		}
+	})
+
+	$http.get('pwd').then(suc,fail); 
+	suc/fail 回调函数，参数res 响应数据
+
+post:
+	this.$http.post('url',{
+			a:1,
+			b:2
+		},{
+			emulateJSON : true	//模拟JSON数据
+		}).then(sucCallback,failCallback);
+
+jsonp:
+
+	this.$http.jsonp('',{
+		//请求中携带发送的数据
+		},{
+			jsonp:'cb'	//callback的名称,默认为callback
+		}).then(sucFun,failFun)
+
+
+
+出错：
+1.
+this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+                       	wd: this.val
+                    },{
+			jsonp:'cb'
+				}).then(function(res){
+					this.myData=res.data.s;
+				},function(res){
+					console.log(res.status);
+				})
+
+报错sug。
+
+解决方法：
+this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+		params: {
+                       	wd: this.val
+                    },
+                    jsonp:'cb'
+				}).then(function(res){
+					this.myData=res.data.s;
+				},function(res){
+					console.log(res.status);
+				})

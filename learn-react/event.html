@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8"/>
+	<script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+	<script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel">
+		class Switch extends React.Component{
+			constructor() {
+				super();
+				this.state = {
+					flag : true
+				};
+				this.handleClick = this.handleClick.bind(this);
+				// 绑定this 
+			}
+
+			handleClick() {
+				this.setState( pre => ({
+					flag : !pre.flag
+				}));
+			}
+
+			render() {
+				return (
+					<button  onClick={this.handleClick}>
+						{this.state.flag ? 'ON' : 'OFF'}
+					</button>
+				)
+			}
+		}
+
+		ReactDOM.render(
+			<Switch/>,
+			document.getElementById('root')
+		)
+	</script>
+</body>
+</html>
+
+<!-- 
+	this.setState({
+		key1 : val1,
+		key2 : val2
+	})
+
+	this.setState((pre, props) => ({
+		key1 : val1,
+		key2 : val2
+	}))
+
+	绑定this可以如下
+
+	handleClick = () => {
+		...
+	}
+
+	当传递参数时，e 要放在所有参数最后
+ -->

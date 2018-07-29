@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8"/>
+	<script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+	<script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel">
+	class Tem extends React.Component{
+		constructor() {
+			super();
+			this.state = {
+				value : '1111'
+			};
+			this.handleChange = this.handleChange.bind(this);
+			this.handleCommit = this.handleCommit.bind(this);
+		}
+		
+		handleChange(e) {
+			this.setState({
+				value : e.target.value
+			});
+		}
+
+		handleCommit(e) {
+			alert(this.state.value);
+			e.preventDefault();
+		}
+
+		render() {
+			return (
+				<div>
+					<input type="text" value={this.state.value} onChange={this.handleChange}/>
+					<button onClick={this.handleCommit}>提交</button>
+				</div>
+			)
+		}
+	}
+
+	ReactDOM.render(
+		<Tem />,
+		document.getElementById('root')
+	)
+	</script>
+</body>
+</html>

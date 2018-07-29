@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8"/>
+	<script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+	<script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel">
+		function Tishi(props) {
+			return (
+				<p>{props.tem > 100 ? '水开了' : '水没开'}</p>
+			)
+		}
+
+		class Calculator extends React.Component{
+
+			constructor() {
+				super();
+				this.state = {
+					value : ''
+				}
+				this.handleChange = this.handleChange.bind(this);
+			}
+			
+			handleChange(e) {
+				this.setState({
+					value : e.target.value
+				})
+			}
+
+			render() {
+				return (
+					<div>
+						<input type="text" value={this.state.value} onChange={this.handleChange}/>
+						<Tishi tem={this.state.value} />
+					</div>
+				)
+			}
+		}
+
+		ReactDOM.render(
+			<Calculator />,
+			document.getElementById('root')
+		)
+	</script>
+</body>
+</html>

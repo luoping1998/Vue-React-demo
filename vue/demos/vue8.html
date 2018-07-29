@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue8</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<p>{{mess}}</p>
+		<child v-on:father-way="toChange"></child>
+	</div>
+</body>
+<script type="text/javascript">
+	Vue.component('child',{
+		template:'<div>\
+						<input type="text" v-model="message">\
+						<button v-on:click="childWay">更改</button>\
+					</div>',
+		data:function(){
+			return {
+				message:'hhhh'
+			};
+		},
+		methods:{
+			childWay:function(){
+				//触发父组件的事件，将message传过去
+				// console.log('child');
+				this.$emit('father-way',{message:this.message});
+			}
+		}
+	})
+
+	new Vue({
+		el:'#app',
+		data:{
+			mess:'emmmm'
+		},
+		methods:{
+			toChange:function(mes){
+				this.mess=mes.message;
+				// console.log(mes);
+			}
+		}
+	})
+
+	//在DOM中注册自定义事件时不能用驼峰，得用 - 
+</script>
+</html>

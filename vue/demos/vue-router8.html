@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router 重定向</title>
+	<script type="text/javascript"  src="../vue.js"></script>
+	<script type="text/javascript"  src="../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-link to="/a">toA</router-link>
+		<router-link to="/b">toB</router-link>
+		<router-view></router-view>
+	</div>
+</body>
+<script type="text/javascript">
+	const A = { template : '<p>I am a</p>'}
+	const router = new VueRouter({
+		routes : [{
+			path:'/a',
+			component:A
+		},{
+			path:'/b',redirect:'/a'
+		}]
+	})
+
+	new Vue({
+		router
+	}).$mount('#app')
+</script>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>简陋的双向绑定</title>
+	<script src="../vue.js"></script>
+</head>
+<body>
+	<input type="text" id="mod"/>
+	<p id="send"></p>
+</body>
+</html>
+<script>
+	var oMod = document.getElementById("mod");
+	var oSend = document.getElementById("send");
+	var obj = {};
+	Object.defineProperties(obj,{
+		val : {
+			configurable : true,
+			get : function(){
+				oSend.innerHTML = oMod.value;
+				return oMod.value;
+			},
+			set : function(newVal) {
+				oSend.innerHTML = oMod.value = newVal;
+			}
+		}
+	});
+	oMod.addEventListener('keyup',function() {
+		obj.val = oMod.value;
+	},false);
+</script>

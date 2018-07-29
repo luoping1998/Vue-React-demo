@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>todolist</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<script type="text/javascript">
+		window.onload=function () {
+			new Vue({
+				el:'#list',
+				data:{
+					myData:[],
+					name:'',
+					left:''
+				},
+				methods:{
+					add:function(){
+						this.myData.push({
+							name:this.name,
+							left:this.left
+						});
+						this.name='';
+						this.left='';
+					},
+					del:function(index){
+						this.myData.splice(index,1);
+						// alert(index);
+					},
+					alldelete:function(){
+						this.myData=[];
+					}
+				}
+
+			})
+		}
+	</script>
+</head>
+<body>
+	<div id="list">
+		用户名：
+		<input type="text" placeholder="用户名" v-model="name"><br/>
+		留言：
+		<input type="text" placeholder="留言" v-model="left"><br/>
+		<button v-on:click="add">添加</button>
+		<hr/>
+		<div>
+			<h3>留言板</h3>
+			<ul>
+				<li v-for="(item,index) in myData">
+					{{index}}:{{item.name}}:{{item.left}}
+					<button v-on:click="del(index)">删除</button>
+				</li>
+			</ul>
+			<button v-on:click="alldelete">全部删除</button>
+		</div>
+	</div>
+</body>
+</html>

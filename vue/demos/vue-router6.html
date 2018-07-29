@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router6</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<script type="text/javascript" src="../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-link to="/user">toUser</router-link>
+		<router-link to="/email">toEmail</router-link>
+		<router-link to="/profile">toPro</router-link>
+		<router-view></router-view>
+	</div>
+</body>
+<script type="text/javascript">
+	const User = { 
+		template:'<div>\
+					<h1>user</h1>\
+					<router-view></router-view>\
+				  </div>'
+	}
+
+	const Email = {
+		template : '<div>\
+						<h2>email</h2>\
+						<router-link to="/em">toEMM</router-link>\
+						<router-view></router-view>\
+					</div>'
+	}
+
+	const Profile = {
+		template : '<div>\
+						<h2>profile</h2>\
+						<router-link to="/pro">toPRR</router-link>\
+						<router-view name="help"></router-view>\
+						<router-view></router-view>\
+					</div>'
+	}
+
+	const Help = {
+		template : '<p>help</p>'
+	}
+
+	const Def = {
+		template : '<p>default</p>'
+	}
+
+	const EMM = {
+		template:'<p>emmmm</p>'
+	}
+
+	const router = new VueRouter({
+		routes : [{
+			path:'/user',component:User,
+			children:[{
+				path:'/email',
+				component:Email,
+				children:[{
+					path:'/em',
+					component:EMM
+				}]
+			},{
+				path:'/profile',
+				component:Profile,
+				children:[{
+					path:'/pro',
+					components:{
+						default:Def,
+						help:Help
+					}
+				}]
+			}]
+		}]
+	})
+
+	new Vue({
+		router
+	}).$mount('#app')
+</script>
+</html>

@@ -1,0 +1,48 @@
+h1{
+	margin: 0 0 10px 20px;
+}
+#app{
+	width: 800px;
+	height: 400px;
+	background-color: lightgray;
+	margin: 10px auto;
+}
+
+#app .leader{
+	width: 200px;
+	height:320px;
+	float: left;
+	margin: 0 0 0 20px;
+	color:black;
+	background-color: white; 
+}
+
+.leader .item{
+	width: 100%;
+	height: 50px;
+	font-size: 20px;
+	line-height: 50px;
+	text-indent: 20px;
+	float: left;
+}
+
+#app .show{
+	width: 540px;
+	height: 320px;
+	background-color: white; 
+	margin-left: 20px;
+	float: left;
+	text-indent: 20px;
+}
+
+.show .s-leader{
+	width: 100px;
+	height: 50px;
+	text-align: center;
+	line-height: 30px;
+	float: left;
+}
+
+.show ul{
+	float: left;
+}

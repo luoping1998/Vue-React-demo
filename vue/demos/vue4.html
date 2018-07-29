@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue4</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<p>{{a}}</p>
+		<button @click=" a ='pap' ">Change</button>
+	</div>
+</body>
+<script type="text/javascript">
+	var data = {
+		a:'emmmm'
+	}
+
+	Object.freeze(data);
+
+	new Vue({
+		el:'#app',
+		data:data
+	})
+</script>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vue</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="checkbox" id="checkbox" v-model="ced">
+		<label for="checkbox">{{ced}}</label>
+
+		<input type="checkbox" id="r1" value="r1" v-model="cedArray">
+		<label for="r1">r1</label>
+		<input type="checkbox" id="r2" value="r2" v-model="cedArray">
+		<label for="r1">r2</label>
+		<p>{{cedArray}}</p>
+	</div>
+</body>
+<script type="text/javascript">
+new Vue({
+	el:'#app',
+	data:{
+		ced:false,
+		cedArray:[]
+	}
+})
+</script>
+</html>

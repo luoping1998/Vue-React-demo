@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>pay</title>
+	<link rel="stylesheet" type="text/css" href="./pay.css">
+	<script type="text/javascript" src="../../vue.js"></script>
+</head>
+<body>
+	<div id="pay">
+		<table>
+			<tr>
+				<th colspan="6">购物清单</th>
+			</tr>
+			<tr>
+				<td >
+					<input type="checkbox" @click="allCheck">全选
+				</td>
+				<td>商品</td>
+				<td>数量</td>
+				<td>单价(元)</td>
+				<td>金额(元)</td>
+				<td>操作</td>
+			</tr>
+			<tr v-for="(thing,index) in things">
+				<td class="small">
+					<input type="checkbox" :value="index" v-model="checked">
+				</td>
+				<td><img :src="thing.url">{{thing.name}}</td>
+				<td>
+					<button @click="jian(index)">-</button>
+					{{thing.count}}<button @click="thing.count++">+</button>
+				</td>
+				<td>￥{{thing.cost}}</td>
+				<td>￥{{thing.all}}</td>
+				<td><button @click="del(index)">删除</button></td>
+			</tr>
+			<tr>
+				<td colspan="3"><button @click="delChecked">删除所选中商品</button></td>
+				<td colspan="3">总计:{{allcount}}</td>
+			</tr>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+
+	new Vue({
+		el:'#pay',
+		data:{
+			things:[
+				{
+					'url':'./pay.jpg',
+					'name':'吹风机1',
+					'count':1,
+					'cost':100,
+					'all':100
+				},
+				{
+					'url':'./pay.jpg',
+					'name':'吹风机2',
+					'count':1,
+					'cost':100,
+					'all':100
+				},
+				{
+					'url':'./pay.jpg',
+					'name':'吹风机3',
+					'count':1,
+					'cost':100,
+					'all':100
+				},
+				{
+					'url':'./pay.jpg',
+					'name':'吹风机4',
+					'count':1,
+					'cost':100,
+					'all':100
+				}
+			],
+			checked:[],
+			allcount:400
+			},
+		methods:{
+			del:function(index){
+				this.things.splice(index,1);
+			},
+			jian:function(index){
+				if(this.things[index].count>=2){
+					this.things[index].count--;
+				}else{
+					this.things.splice(index,1);
+				}
+			},
+			delChecked:function(){
+				//从小到大排序
+				this.checked.sort(function(a,b){return a-b});
+				var i ;
+				var len = this.checked.length;
+				for(i = len-1; i>=0; i--){
+					var index = this.checked[i];
+					this.things.splice(index,1);
+					this.checked.pop();
+				}
+			},
+			allCheck:function(){
+				if(this.checked.length === this.things.length
+					){
+					this.checked = [];
+				}else{
+					this.checked = [];
+					var len = this.things.length;
+					for(var i = 0;i<len;i++){
+						this.checked.push(i);
+					}
+				}
+				
+			}
+		},
+		watch:{
+			things: {
+				handler:function(){
+					this.allcount = 0;
+					var len = this.things.length;
+					for(var i = 0;i<len;i++){
+						this.things[i].all = this.things[i].count* this.things[i].cost; 
+						this.allcount += this.things[i].all;
+					}
+				},
+				deep:true
+			}
+		}
+
+	})
+</script>
+</html>

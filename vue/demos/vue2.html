@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue2</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<!-- <script>Vue.config.productionTip=false</script> -->
+</head>
+<body>
+	<div id="app">
+		<button v-on:click="greet">greet</button>
+		<button v-on:click="say">hi</button>	
+	</div>
+</body>
+<script type="text/javascript">
+	window.onload=function () {
+		new Vue({
+			el:'#app',
+			methods:{
+				say:function(){
+					alert('hi!');
+				}
+			},
+			computed:{
+				greet:function(){
+					alert('greet!');
+				}
+			}
+
+		})
+	}
+</script>
+</html>

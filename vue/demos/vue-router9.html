@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router 别名</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<script type="text/javascript" src="../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-link to="/">Home</router-link>
+		<router-link to="/user/王华华">王华华</router-link>
+		<router-link to="/user/hhhh">HHHH</router-link>
+		<router-view></router-view>
+	</div>
+</body>
+<script type="text/javascript">
+	const Home = { template : '<h1>Home</h1>'}
+
+	//利用append属性绑定当前路径为base
+	const User = { template : '<div><h2>我叫{{$route.params.name}}</h2>\
+								<p>我{{$route.query.age}}岁了</p>\
+								<router-link to="more" append>More</router-link>\	
+								<div><router-view></router-view></div>\
+								</div>'}
+
+	const More = { template : '<p>{{$route.params.name}}的详情资料<p>'}
+	const router = new VueRouter({
+		routes : [{
+			path : '/',
+			component : Home
+		},{
+			path : '/user/:name',
+			component:User,
+			children : [{
+				path:'more',
+				component : More
+				}
+			]
+		}]
+	})
+
+	new Vue({
+		el:'#app',
+		router : router
+	})
+</script>
+
+</html>

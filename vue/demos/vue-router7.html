@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router 别名</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<script type="text/javascript" src="../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-link to="/home">home</router-link>
+		<router-link to="/home/bar-alias">home/bar-alias</router-link>
+		<router-link to="/baz">/baz</router-link>
+		<router-link to="/home/baz-alias">/baz-alias</router-link>
+		<router-view></router-view>
+	</div>
+</body>
+<script type="text/javascript">
+	const Home = { template : '<div><h1>Home</h1><router-view></router-view></div>'}
+	const Bar = { template : '<p>bar</p>'}
+	const Foo = { template : '<p>foo</p>'}
+	const Baz = { template : '<p>baz</p>'}
+
+	const router = new VueRouter({
+		routes : [
+			{
+				path:'/home',component:Home,
+				children:[
+				{
+					path:'foo',
+					component:Foo,
+					alias:'/foo'},{
+
+					path:'bar',
+					component:Bar,
+					alias:'bar-alias'
+				},{
+					path:'baz',
+					component:Baz,
+					alias:['/baz','baz-alias']}
+				]
+			}
+		]
+	})
+
+	new Vue({
+		router
+	}).$mount('#app')
+</script>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue-router</title>
+	<link rel="stylesheet" type="text/css" href="index.css"/>
+	<script type="text/javascript" src="../../vue.js"></script>
+	<script type="text/javascript" src="../../vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<h1>Routere Basic-05</h1>
+		<div class="leader">
+			<router-link class="item" to="home">Home</router-link>
+			<router-link class="item" to="about">About</router-link>
+		</div>
+		<div class="show">
+			<router-view></router-view>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	const Home = { template : '<div>\
+								<h2>Home</h2>\
+								<p>Hello, vue router!</p>\
+								<router-link class="s-leader" to="/news">News</router-link>\
+								<router-link class="s-leader" to="/mes">Messages</router-link>\
+								<router-view></router-view>\
+								</div>'}
+
+	const News = { template : '<div><ul>\
+									<li><router-link to="/news1">News1</router-link></li>\
+									<li><router-link to="/news2">News2</router-link></li>\
+									<li><router-link to="/news3">News3</router-link></li>\
+								</ul>\
+								<router-view></router-view>	\
+								</div>\
+								'}
+
+	const Mes = { template : '  <div><ul>\
+									<li>Message1</li>\
+									<li>Message2</li>\
+									<li>Message3</li>\
+								</ul></div>'}
+
+	const Show = { template : '<div><p>hhhhhh</p></div>'}
+	const About = { template : '<div><h2>Hi, I\'m About.</h2></div>'}
+
+	const router = new VueRouter({
+		routes : [
+			{
+				path : '/home',
+				component : Home,
+				children : [{
+					path : '/news',
+					component : News,
+					children : [{
+						path : '',
+						component : Show
+					}]
+				},{
+					path : '/mes',
+					component : Mes
+				}]
+			},{
+				path : '/about',
+				component : About
+			},{
+				path : '/',
+				redirect : '/home'
+			}
+		]
+	})
+
+	new Vue({
+		router
+	}).$mount('#app')
+</script>
+</html>

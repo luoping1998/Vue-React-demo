@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8" />
+	<script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+	<script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel">
+class Clock extends React.Component{
+		constructor(props) {
+			super(props);
+			this.state = {
+				date : new Date()
+			};
+		}
+
+		componentDidMount() {
+			this.TimerID = setInterval(
+				()=> this.tick(),
+				1000
+			);
+		}
+
+		componentWillUnmount() {
+			clearInterval(this.TimerID);
+		}
+
+		tick() {
+			this.setState({
+				date : new Date()
+			})
+		}
+
+		render() {
+			return(
+				<div>
+					<h1>Hello, {this.props.name}.</h1>
+					<p>{this.state.date.toLocaleString()}</p>
+				</div>
+			);
+		}
+	}
+
+	ReactDOM.render(
+		<Clock name="A"/>,
+		document.getElementById('root')
+	);
+	
+	</script>
+</body>
+</html>
+
+<!--  
+报错：Uncaught TypeError: Super expression must either be null or a function, not undefined
+
+检查React.Componenet 是否书写正确
+-->

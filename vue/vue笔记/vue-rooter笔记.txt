@@ -1,0 +1,224 @@
+<router-link> 导航：
+1.to属性 指定链接 router-link会被渲染成一个<a>标签
+
+to.matched -> 匹配的路由
+
+被点击后，内部会立刻把 to 的值传到 router.push()，
+所以这个值可以是一个字符串或者是描述目标位置的对象。
+	
+router.push() 编程式的<router-link>:
+该方法的参数可以是一个字符串路径，或者一个描述地址的对象。
+
+1)普通的：
+to = "home" |( v-bind ):  to = "'home'" |:to="{ path : 'home' }" //'home'默认被当做path的参数传进去
+
+2)命名的：
+:to = "{ name: 'user', params : {userId : 123}}"	// user/123	
+
+3)带查询参数 
+:to = "{path : 'register' , query : {plan :'private'}}" 	//register?plan=private
+
+2.replace boolaean 默认值false 
+当点击时被调用的是router.replace() 而不是router.push() 不会留下history记录
+
+3.append boolean 默认值false 设置后再当前路径前添加基路径 
+例如 从/a导航到一个相对路径b，配置后，则为/a/b,没配置则为/b
+
+4.tag 默认值 'a' 如果希望<router-link>渲染成某种标签，例如<li>，则设置tag = "li",
+同样会监听点击，触发导航
+
+5.active-class 默认"router-link-active" 设置激活时使用的CSS类名
+默认值可以通过路由的构造选项 linkActiveClass 来全局配置。
+
+6.exact boolean 默认值false 
+例如,
+<router-link to"/" exact> 	// 链接只有当地址为/时候激活
+
+1.1 router.push(); 
+如果提供了 path，params 会被忽略， query 并不属于这种情况。
+你需要提供路由的 name 或手写完整的带有参数的 path。
+
+const userId = 123
+
+router.push({ name: 'user', params: { userId }}) // -> /user/123
+
+router.push({ path: `/user/${userId}` }) // -> /user/123
+
+// 这里的 params 不生效
+router.push({ path: '/user', params: { userId }}) // -> /user		需要指定name
+
+1.2 router.replace(location, onComplete, onAbort)
+和 push()差不多，但是不会向history添加新记录，而是替换掉当前的history记录
+
+1.3 router.go(n) 在history记录中向前或者后退|n|步  
+如果 history 记录不够用，那就默默地失败
+——————————————————————————————————————
+
+<router-view> 路由出口 匹配到的组件会渲染在其中
+
+
+导入Vue和VueRouter 调用Vue.use(VueRouter)
+
+1.定义路由组件 或者从其他文件import进来。
+const Foo = { template : '<p>foo</p>'};
+const Bar = { template : '<p>bar</p>'};
+
+2.定义路由  *每个路由映射一个组件,
+component可以是通过 Vue.extend()创建的组件构造器，
+或者一个组件配置对象。
+
+const routes = [
+	{ path : '/foo', component : Foo },
+	{ path : '/bar', component : Bar }
+]
+
+3.创建router实例，传'routes'配置，还可以传别的配置参数。
+const router = new VueRouer({
+	routes 	//缩写 -> routes : routes
+})
+
+4.创建和挂载根实例： 通过router配置参数注入路由 让整个应用都有路由功能
+const app = new Vue({
+	router
+}).$mount('#app')	//指定挂载的元素
+
+——————————————————————————————————————————————
+
+动态路由匹配：
+
+比如/user/foo 和 /user/bar 都将映射到相同的路由。
+
+一个『路径参数』使用冒号 : 标记。
+当匹配到一个路由时，参数值会被设置到 this.$route.params，可以在每个组件内使用。
+
+例如：
+/user/:username			/user/evan		{ username: 'evan' }
+/user/:username/post/:post_id	/user/evan/post/123	{ username: 'evan', post_id: 123 }
+
+响应路由参数的变化：
+当使用路由参数时，例如从 /user/foo 导航到 /user/bar，原来的组件实例会被复用。
+因为两个路由都渲染*同个组件，比起销毁再创建，复用则显得更加高效。
+不过，这也意味着组件的生命周期钩子不会再被调用。
+
+复用组件时，想对路由参数的变化作出响应的话，你可以简单地 watch（监测变化） $route 对象：
+const User = {
+  template: '...',
+  watch: {
+    '$route' (to, from) {
+      // 对路由变化作出响应...
+    }
+  }
+
+同一个路径可以匹配多个路由，此时，匹配的优先级就按照路由的定义顺序：
+*谁先定义的，谁的优先级就最高。
+}
+
+——————————————————————————————————————————————
+
+嵌套路由：
+在注册路由的时候
+<div id="app">
+	<router-link to="/user">go user</router-link>
+	<router-link to="/foo">go foo</router-link>
+	<router-link to="/bar">go bar</router-link>
+	<router-view></router-view>
+</div>
+
+const User = { template:'<div><h1>User</h1><router-view></router-view></div>'}
+
+const Foo = { template:'<h2>Foo</h2>'}
+const Bar = { template:'<h2>Bar</h2>'}
+
+const router = new VueRouter({
+	routes:[
+		{ path:'/user',	component:User,
+		  children:[	//等于是User的子组件，将在User的router-view中显示出来
+			{
+				path:'/foo',
+				component:Foo
+			},{
+				path:'/bar',
+				component:Bar
+			}
+		]}
+	]
+})
+
+new Vue({
+	router
+}).$mount('#app')
+
+以 / 开头的嵌套路径会被当作根路径。 这让你充分的使用嵌套组件而无须设置嵌套的路径。
+
+基于上面的配置，当你访问 /user/foo 时，User 的出口是不会渲染任何东西，
+这是因为没有匹配到合适的子路由。如果你想要渲染点什么，可以提供一个 空的子路由。
+
+——————————————————————————————————————————
+命名路由：
+通过一个名称来标识一个路由，例如：
+const router = new VueRouter({
+	routes:[
+		{
+			path:'/user/:userId',
+			name:'user',
+			component:User
+		}
+	]
+})
+
+要链接到一个命名路由，可以给router-link 的to属性传一个对象。
+to="{name:'user',params:{userId:123}}" 跳转到/user/123
+
+——————————————————————————————————————————
+
+命名视图：
+可以再界面中拥有多个单独命名的视图，而不是一个单独的出口。
+如果router-view没有设置名字，默认为default
+
+一个视图用一个组件渲染，因此对于多个路由，多个视图就需要多个组件，使用components配置：
+
+<router-view class="one"></router-view>
+<router-view class="two" name="a"></router-view>
+<router-view class="three" name="b"></router-view>
+
+const router = new VueRouter({
+	routes:[
+		{
+			path:'/',
+			components:{
+				default:Foo,
+				a:Bar,
+				b:Baz
+			}
+		}
+	]
+})
+
+——————————————————————————————————————————
+
+重定向：意思是，当用户访问 /a时，URL 将会被替换成 /b，然后匹配路由为 /b
+const router = new VueRouter({
+  routes: [
+    { path: '/a', redirect: '/b' }
+  ]
+})
+
+
+别名：/a 的别名是 /b，意味着，当用户访问 /b 时，URL 会保持为 /b，但是路由匹配则为 /a，
+就像用户访问 /a 一样。
+const router = new VueRouter({
+  routes: [
+    { path: '/a', component: A, alias: '/b' }
+  ]
+})
+
+——————————————————————————————————————————
+
+beforeEach(callback(to,from,next){
+	next();		//正常执行
+	next('url');	//到url路径下
+	next(false);	//不执行
+})
+
+——————————————————————————————————————————
+meta : 自定义属性 在route中设置访问该路由需要的条件

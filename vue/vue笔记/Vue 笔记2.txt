@@ -1,0 +1,444 @@
+data:
+当一个Vue实例创建时，向vue响应式系统中加入了data对象中能找到的素有属性，当这些属性
+发生改变时，试图都会产生“响应”。当数据改变时，视图会进行重渲染，但是只有当实例
+被创建时data中存在的属性才是响应式的。就是说如果添加了一个新的属性，他的改变就不会
+触发视图的更新。
+
+例如：
+<div id="app">
+	{{a}}:{{b}}
+</div>
+
+var vm = new Vue({
+	el:'#app',
+	data:{
+		a:'emmm'
+	}
+})
+
+vm.b = 'hi';
+
+当你对b进行改变时，不会触发视图的更新。
+
+另外，使用Object.freeze()，阻止修改现有的属性，也就是响应式系统无法再追踪变化。
+
+例如：
+
+var data = {
+		a:'emmm'
+	}
+
+Object.freeze(data);
+
+var vm = new Vue({
+	el:'#app',
+	data:data
+})
+
+<div id="app">
+	<p>{{a}}</p>
+	<!-- 这里的a不会更新 -->
+	<button v-on:click="a = 'aaa'">Change</button>
+</div>
+
+————————————————————————————————————————
+
+生命周期：
+1）beforeCreate（创建前）:
+	在实例初始化之后，监控Data对象数据变化和Vue内部初始化事件
+
+2）created（创建后）:
+	将data里面的数据和模板生成html	
+	
+	先判断是否有el ，有->	判断是否有template -> 有 ->将template加入到render 树中
+			没有->	当vm.$mount(el)被调用再判断是否有tempalte
+							没有->将el的outerHTML当做template
+
+3）beforeMount（载入前）:
+	开始执行beforeMount 但还没生成html挂到页面上 
+	用之前编译好的html内容替换el属性指向的dom对象或者选择对应的html标签里面的内容
+	
+4）mounted（载入后）：
+	挂载完成，此时可以进行一些ajax操作 并且mounted只会执行一次！
+
+5）beforeUpdata（更新前）：			
+	检测数据变化
+ 
+6）updated（更新后）：
+	根据变化 更新DOM
+	
+7）beforeDestroy（销毁前）：
+	实例销毁之前调用。
+
+8）destoyed（销毁后）：
+	实例销毁之后调用，调用之后Vue实例指示的所有东西被解绑，所有时间监听器被移除，
+    所有自实例也会销毁。该钩子在服务器端渲染期间不被调用。
+
+————————————————————————————————————————
+
+在Vue实例的数据作用域下，每个绑定智能包含单个表达式，如：
+{{ num + 1 }}
+{{ok ? 'yes' : 'no' }}
+{{ mes.split('').reverse().join('')}}
+
+而以下就无效：
+{{ var a = 1}}
+{{ if(ok) {return mes } }}
+
+————————————————————————————————————————
+
+computed属性是基于依赖进行缓存的，只有当它们的依赖发生改变时才会重新求值，如果
+没有发生改变就会立即返回之前的计算结果。而methods则在出资按重新渲染时就会再次
+执行函数。如果不希望有缓存就可以用方法代替。
+
+当 v-if 与 v-for 一起使用时，v-for 具有比 v-if 更高的优先级
+
+在 v-for 块中，我们拥有对父作用域属性的完全访问权限。
+
+————————————————————————————————————————
+
+Vue 不能检测以下变动的数组：
+
+1.利用索引直接设置一个项：vm.items[index] = newV;
+2.修改数组长度时：vm.items.length = newL;
+
+例如：
+var vm = new Vue({
+  data: {
+    items: ['a', 'b', 'c']
+  }
+})
+vm.items[1] = 'x' // 不是响应性的
+vm.items.length = 2 // 不是响应性的
+
+1.解决：
+Vue.set(vm.items, index, newV);
+
+vm.items.splice(index, 1 ,newV);
+
+2.解决：
+vm.items.splice(newL);
+
+
+Vue对象更改检测注意事项：
+
+Vue不能检测对象属性的添加和删除。
+var vm = new Vue({
+  data: {
+    a: 1
+  }
+})
+// `vm.a` 现在是响应式的
+
+vm.b = 2
+// `vm.b` 不是响应式的
+
+对于已经创建的实例，Vue 不能动态添加根级别的响应式属性。
+但是，可以使用 Vue.set(object, key, value) 方法向嵌套对象添加响应式属性。
+
+解决方法：
+Vue.set(vm.objName, propertyName, value);
+
+vm,objName = Object.assign({},vm.objName,{
+	key1 : value1,
+	...
+})
+
+————————————————————————————————————————
+
+组件：
+
+在 Vue 中，父子组件的关系可以总结为 prop 向下传递，事件向上传递。
+父组件通过 prop 给子组件下发数据，子组件通过事件给父组件发送消息。
+
+
+组件实例的作用域是孤立的。这意味着不能 (也不应该) 在子组件的模板内直接引用
+父组件的数据。父组件的数据需要通过 prop 才能下发到子组件中。
+
+子组件要显式地用 props 选项声明它预期的数据，然后在父组件向子组件传参。
+
+HTML 特性是不区分大小写的。所以，当使用的不是字符串模板时，
+camelCase (驼峰式命名) 的 prop 需要转换为相对应的 kebab-case (短横线分隔式命名)
+
+Prop 是单向绑定的：当父组件的属性变化时，将传导给子组件，但是反过来不会。
+这是为了防止子组件无意间修改了父组件的状态，来避免应用的数据流变得难以理解。
+
+注意在 JavaScript 中对象和数组是引用类型，指向同一个内存空间，如果 prop 是一个
+对象或数组，在子组件内部改变它会影响父组件的状态。
+
+————————————————————————————————————————
+
+Prop验证：
+props:{
+	propA : Number,
+	propB : [String , Number],
+	propC :{
+		type : String,
+		required : true
+	},
+	propD : {
+		type : Number,
+		default : 100
+	}
+}
+
+type 可以是下面原生构造器：
+String\Number\Boolean\Function\Object\Array\Symbol
+
+ype 也可以是一个自定义构造器函数，使用 instanceof 检测。
+
+当 prop 验证失败，Vue 会抛出警告 (如果使用的是开发版本)。注意 prop 会在组件实例
+创建之前进行校验，所以在 default 或 validator 函数里，诸如 data、computed 或 
+methods 等实例属性还无法使用。
+
+
+——————————————————————————————————————————
+
+watch：
+
+观测Vue实例上的数据变动，对应一个对象，键->就是需要监测的那个东西，
+值：
+1.可以是当键变化时执行的函数，有两个参数，第一个是变化前的值，第二个是变化后的值。
+2.可以是函数名，得用单引号包裹。
+3.可以是一个对象，这个对象有三个选项：
+（1）handler ：一个回调函数，监听到变化时应该执行的函数。
+（2）deep ：boolean值，是否深度监听。（一般监听时是不能监听到对象属性值的变化的，数组的变化可以听到）
+（3）immediate ：boolean值，是否立即执行handler函数。
+
+watch的三种情况：
+1. 普通的watch：
+new Vue({
+	el:'#app',
+	data:{
+		meter:1000,
+		kilameter:1
+	},
+	watch:{
+		meter:function(val){
+			this.kilameter = val * 0.1;
+		},
+		kilameter:function(val){
+			this.meter = val *1000;
+		}
+	}
+})
+
+2.数组的watch：
+new Vue({
+	el:'#app',
+	data:{
+		arr:[1,2,3]
+	},
+	watch:{
+		arr:function(oldV,newV){
+			console.log(oldV);
+			console.log(newV);		
+		}
+	}
+})
+
+3.对象的watch：
+new Vue({}
+	el:'#app',
+	data:{
+		obj : {
+			a:111,
+			b:222
+		}	
+	},
+	watch:{
+		obj:{
+			handler:function(oldV,newV){
+				console.log(oldV);
+			},
+			deep:true
+		}
+	}
+)
+
+————————————————————————————————————
+
+自定义事件：
+
+在子组件的某个事件中触发父组件的某个自定义事件。
+
+利用v-on绑定自定义事件
+使用$on(eventname)监听事件
+使用$emit(eventName, optionalPayload)触发事件
+
+父组件可以在使用子组件的地方直接用 v-on 来监听子组件触发的事件。
+主要靠着父组件注册自定义事件，子组件触发该事件，达到传参等效果。
+
+例1：
+<div id="app">
+	<p>{{all}}</p>
+	<!-- 可以理解为为example注册了一个fatherCount事件 ，当该事件被触发时会调用addCount函数-->
+	<example v-on:fatherCount="addCount"></example>	
+	<example v-on:fatherCount="addCount"></example>
+</div>
+
+Vue.component('example',{
+	//为example的子组件注册了click事件，当触发时会调用其组件自己的方法childCount
+	template:'<button v-on:click="childCount">{{count}}</button>',
+	data:function(){
+		return {
+			count:0
+		}
+	},
+	methods:{
+		childCount:function(){
+			this.count++;
+			//当该方法触发时 会触发fatherCount事件
+			this.$emit('fatherCount');
+		}
+	}
+})
+
+new Vue({
+	el:'#app',
+	data:{
+		all:0
+	},
+	methods:{
+		addCount:function(){
+			this.all++;
+		}
+	}
+})
+
+例2：
+<div id="app">
+	<p>{{mess}}</p>
+	<child v-on:father-way="toChange"></child>
+</div>
+
+Vue.component('child',{
+	template:'<div>\
+					<input type="text" v-model="message">\
+					<button v-on:click="childWay">更改</button>\
+				</div>',
+	data:function(){
+		return {
+			message:'hhhh'
+		};
+	},
+	methods:{
+		childWay:function(){
+			//触发父组件的事件，将message传过去
+			// console.log('child');
+			this.$emit('father-way',{message:this.message});
+		}
+	}
+})
+
+new Vue({
+	el:'#app',
+	data:{
+		mess:'emmmm'
+	},
+	methods:{
+		toChange:function(mes){
+			this.mess=mes.message;
+			// console.log(mes);
+		}
+	}
+})
+
+	//在DOM中注册自定义事件时不能用驼峰，得用 '-' 
+
+理解：子组件在触发父组件注册的自定义事件A的时候，其实就是它触发了事件A，然后事件冒泡到
+它的父组件，于是，父组件调用相应的函数。
+
+————————————————————————————————————————————
+？？？.sync
+
+？？？自定义组件的v-model
+
+
+非父子组件的通信：
+简单场景下可以使用一个空的Vue实例作为事件总线。
+var bus = new Vue();
+
+//触发组件A中的事件
+bus.$emit('selected',1);
+
+//在组件B创建的钩子中监听事件
+bus.$on('selected',function(id){
+	//...
+})
+
+在复杂情况下，考虑使用专门的状态管理模式。
+
+
+子组件引用：
+直接访问子组件，使用 ref 为子组件指定一个引用 id。
+
+$refs 只在组件渲染完成后才填充，并且它是非响应式的。它仅仅是一个直接操作子组件的应急方案，
+应当避免在模板或计算属性中使用 $refs。
+
+————————————————————————————————————————————
+computed：
+1.	
+<div id="app">
+	<p>a : {{a}}</p>
+	<p>b : {{b}}</p>
+</div>	
+
+var vm = new Vue({
+	el:'#app',
+	data:{
+		a:1
+	},
+	computed:{
+		b:function(){
+			return this.a * 2;
+		}
+	}
+})
+
+//computed默认为get
+vm.b = 3;	//报错 :Computed property "b" was assigned to but it has no setter.
+
+2.
+<div id="app">
+	<p>a : {{a}}</p>
+	<p>b : {{b}}</p>
+</div>
+
+var vm = new Vue({
+	el:'#app',
+	data:{
+		a:1
+	},
+	computed:{
+		b:{
+			get:function(){
+				return this.a+1;
+			},
+			set:function(val){
+				this.a = val*2;
+			}
+		}
+	}
+})
+
+vm.b = 10;
+
+//val = 10 ,即把10当作val参数传入，且同样不能直接在set中改变vm.b
+
+在computed中放置一些业务逻辑
+
+——————————————————————————————————————————
+Vue 实例的方法：
+vm.$el -> 挂载的元素
+
+vm.$mount('#app') 指定vm挂载的元素
+
+vm.$options -> 获取vue属性
+
+vm.$data -> data
+
+vm.$log() -> 查看数据状态
+
+v-for 循环 track-by = "index" 添加重复数据
+

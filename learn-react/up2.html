@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8"/>
+	<script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+	<script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel">
+		function toCelsius(fahrenheit) {
+		  return (fahrenheit - 32) * 5 / 9;
+		}
+
+		function toFahrenheit(celsius) {
+		  return (celsius * 9 / 5) + 32;
+		}
+
+		class Tem extends React.Component{
+			constructor(props) {
+				super(props);
+				this.handleChange = this.handleChange.bind(this);
+			}
+			
+			handleChange(e) {
+				this.props.handleChange(e.target.value);
+			}
+
+			render() {
+				return (
+					<div>
+						<p>{this.props.name} :</p>
+						<input type="text" value={this.props.temp} onChange={this.handleChange} />
+					</div>
+				)
+			}
+		}
+
+		class Calculator extends React.Component{
+			constructor() {
+				super();
+				this.state = {
+					temp : '',
+					now : 'c'
+				}
+				this.onCelChange = this.onCelChange.bind(this);
+				this.onFahChange = this.onFahChange.bind(this);
+
+			}
+			
+			onCelChange(v) {
+				this.setState({
+					temp : v,
+					now : 'c'
+				})
+			}
+
+			onFahChange(v) {
+				this.setState({
+					temp : v,
+					now : f
+				})
+			}
+
+			render() {
+				const now = this.state.now;
+				const temp = this.state.temp;
+				const ctemp = (now === 'c') ? temp : toCelsius(temp);
+				const ftemp = (now === 'f') ? temp : toFahrenheit(temp);
+				return (
+					<div>
+						<Tem name="c" temp={ctemp} handleChange={this.onCelChange} />
+						<Tem name="f" temp={ftemp} handleChange={this.onFahChange} />
+					</div>
+				)
+			}
+		}
+
+		ReactDOM.render(
+			<Calculator />,
+			document.getElementById('root')
+		)
+	</script>
+</body>
+</html>
+
+<!-- 相当于子级监听事件之后传参给父级，然后父级的处理 传回去-->

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>search</title>
+	<style type="text/css">
+		.gray {
+			background-color: #ccc;
+		}
+		#app{
+			width: 250px;
+			height: 300px;
+			margin: 130px auto;
+		}
+		#app input{
+			width: 150px;
+			height: 20px;
+		}
+		#app ul{
+			width: 150px;
+			padding: 0;
+			list-style-type: none;
+		}
+		ul li{
+			padding: 5px;
+		}
+		#app button{
+			width: 50px;
+			height: 30px;
+			background-color: white;
+		}
+		#app img{
+			width: 200px;
+			margin: 0 auto;
+			padding-bottom:30px;
+		}
+	</style>
+	<script type="text/javascript" src="../../vue.js"></script>
+	<script type="text/javascript" src="../../vue-resource.js"></script>
+</head>
+<body>
+	<div id="app">
+		<img src="bd_logo1.jpg">
+		<input type="text" v-model="val" @keyup="tosearch" @click.stop="myData=[]" @keydown.down="todown"  @keydown.up="toup" @keydown.enter="change">
+		<button @click="tofind">搜索</button>
+		<ul>
+			<li v-for="(item,index) in myData" :class="{gray: index === now}" @mouseover="togary(index)" @click="toinput">{{item}}</li>
+		</ul>
+	</div>
+</body>
+
+<script type="text/javascript">
+	new Vue({
+		el:'#app',
+		data:{
+			val:'',
+			myData:[],
+			now:-1
+		},
+		methods:{
+			tosearch:function(ev){
+				if(ev.keyCode == 38 || ev.keyCode==40) return;
+				if(ev.keyCode == 13){
+					window.open('https://www.baidu.com/s?wd='+this.val);
+					this.val = '';
+				}
+				this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+					params: {
+                       	wd: this.val
+                    },
+                    jsonp:'cb'
+				}).then(function(res){
+					this.myData=res.data.s;
+				},function(res){
+					console.log(res.status);
+				})
+			},
+			todown:function(){
+				this.now++;
+				if(this.now === this.myData.length){
+					this.now = -1;
+				}
+			},
+			toup:function(){
+				this.now --;
+				if(this.now === -2){
+					this.now = this.myData.length-1;
+				}
+			},
+			change:function(){
+				if(this.now == -1){
+					this.myData=[];
+					this.val='';
+				}else{
+					this.val=this.myData[this.now];
+				}
+			},
+			togary:function(index){
+				this.now = index;
+			},
+			toinput:function(){
+				this.val=this.myData[this.now];
+				this.myData=[];
+			},
+			tofind:function(){
+				window.open('https://www.baidu.com/s?wd='+this.val);
+				this.val = '';
+			}
+
+		}
+	})
+</script>
+</html>
