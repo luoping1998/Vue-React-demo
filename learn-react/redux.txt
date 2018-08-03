@@ -1,0 +1,101 @@
+Redux的state：
+{
+	todos: [{},{}],
+	visibilityFilter: 'SOME_WORDS'
+}
+
+
+let reducer = createReducers({reducer1,reducer2...})
+let store = createStore(reducer);
+
+action : 描述已发生事件的普通对象
+state ：只读 只存在一个stroe中 只能用dispatch修改
+reducer ：接受先前的state和action，并返回新的state。可以拆成多个小reducer独立操作不同部分 
+
+function reducer(state = [], action) {
+	//通过判断action.type返回state
+}
+
+Action 把数据从应用传给store的有效负荷  是store数据的唯一来源  一般通过store.dispatch()将action传给store
+
+例如： const ADD_TODO = 'ADD_TODO;
+{
+	type: ADD_TODO,
+	text: 'Buil my first Reducx app'
+}
+
+JS的普通对象，必须使用字符串类型的type代表执行动作，规模较大时，建议使用单独的模块文件存放action
+
+import {ADD_TODO, REMOVE_TODO} from '../actionTypes'
+
+添加action index表示用户完成任务的动作序列号 因为数据是村房子啊数组中的，可以通过下标index应用特定任务 
+
+尽量减少在action中传递的数据 
+
+
+Action创建函数 生成action的方法。 Redux中的action创建函数只是简单的返回一个action 
+
+Redux中只需要把action创建函数的结果传给dispatch()方法就可以发起一次dispatch过程
+
+或者创建一个被绑定的action创建函数自动dispatch
+
+store中可以通过store.dispatch方法调用 action创建函数也可以是异步非纯函数 
+
+——————————————————————————————————————————————————
+
+Reducer  指定应用状态的变化如何响应action并发送到store的 action只描述了**事情发生了**这事实  并没有描述应用如何更新
+
+建议你尽可能地把 state 范式化，不存在嵌套。
+
+把所有数据放到一个对象里，每个数据以 ID 为主键，不同实体或列表间通过 ID 相互引用数据。
+
+把应用的 state 想像成数据库。
+
+reducer是一个春函数  接收旧的state和action，返回新的state
+
+(preState, action) => newState
+
+永远不要在reducer中做以下操作：
+修改传入参数
+执行有副作用的操作  例如API请求和路由跳转
+调用非纯函数  如Dat.now()或者Math.random()
+
+reducer 一定要保持纯净
+
+不修改state 使用Object.assign()新建副本  default的情况返回旧的state （未知情况）
+
+function todoAPP(state = initialState, action) {
+	switch (action.type) {
+		case XXX:
+			return ..
+		default:
+			return state;
+	}
+}
+
+reducer中不直接修改state的字段，而是返回新对象  新的todos对象相当于旧的todos在末尾加上行的todo 而这个todo又是action中数据创建的
+
+我们需要修改数组中指定的数据项 而不希望导致突变 因此 是创建一个新的数组后将那些无需修改的项原封不动移入 在对需要修改的项用心生成的对象替换
+
+————————————————————————————————————————————————
+Store 联系action和reducer
+
+维持应用的state  
+提供 getState()方法获取state
+提供dispatch(action)更新state
+通过subscribe注册监听器并根据其返回的函数注销监听器
+
+Redux应用只有一个单一的store  在需要拆分数据处理逻辑时  应该使用reducer组合
+
+创建store ：
+
+import { createStore } from 'redux'
+import todoApp from './reducers'
+let store = createStore(todoApp)
+
+createStore第二个参数时可选，用于设置state初始状态
+
+——————————————————————————————————————————————————
+单向数据流  store.dispatch(action)
+
+根 reducer 应该把多个子 reducer 输出合并成一个单一的 state 树。

@@ -1,0 +1,224 @@
+.slide {
+	width: 100%;
+	height: auto;
+	background: -webkit-linear-gradient(#ddd, white); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#ddd, white); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#ddd, white); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#ddd, white); 
+	position: relative;
+	
+	.slide_tit {
+		padding-top: 35px;
+		padding-bottom: 25px;
+		margin: 0 auto;
+		height: 40px;
+		font-size: 35px;
+		text-align: center;
+		letter-spacing: 10px;
+	}
+
+	.slide_tab {
+		padding: 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		padding-bottom: 30px;
+		li {
+			list-style: none;
+			float: left;
+			padding: 20px;
+			font-size: 17px;
+			padding-top:0;
+			padding-bottom:0;
+			
+			.active {
+				color: #31c27c;
+			}
+			a {
+				text-decoration: none;
+				color: black;
+			}
+		}
+	}
+
+	.slide_bd {
+		width: 100%;
+		max-width:1400px;
+		height: auto;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		flex-wrap: wrap;
+	
+		.slide_card {
+			width: 17%;
+			height:auto;
+			margin: 1%;
+			.card_img {
+				width: 100%;
+				height: 0;
+				padding-bottom: 100%;
+				display: block;
+				background-color: white;
+			}
+
+			.card_word {
+				margin-top: 20px;
+				width: 100%;
+				height: 80px;
+
+				.card_tit {
+					width: 100%;
+					height: auto;
+					max-height: 40px;
+					line-height: 20px;
+					margin-bottom: 10px;
+				}
+
+				.card_commit {
+					.card_tit();
+					height: 20px;
+					color:gray;
+				}
+			}
+		}
+
+		.slide_item {
+			width: 33%;
+			height: 33%;
+			display: flex;
+			align-items: center;
+			flex-direction: row;
+			.item_img {	
+				height: 86px;
+				padding-right: 86px;
+				margin-right: 14px;
+				background-color: white;
+
+			}
+
+			.item_word {
+				width:60%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				flex-direction: column;
+
+				.item_song {
+					padding: 10px;
+					padding-left: 0;
+					padding-right: 0;
+					width: 100%;
+					height: 15%;
+				}
+
+				.item_singer {
+					.item_song();
+					color: gray;
+				}
+
+			}
+
+			.item_time {
+				width: 50px;
+				height: auto;
+				line-height: 100px;
+				span{
+					color: gray;
+					font-size: 17px;
+					align-items: center;
+				}
+			}
+		}
+
+		.slide_movie {
+			width: 17%;
+			height: auto;
+
+			.movie_img {
+				width: 100%;
+				height: 140px;
+				background-color: white;
+				margin-bottom: 20px;
+			}
+
+			.movie_infor {
+				width: 100%;
+				height: 90px;
+				
+				.mv_tit {
+					width: 100%;
+					height: 20px;
+					overflow: hidden;
+					margin-bottom: 10px;
+				}
+
+				.mv_singer {
+					.mv_tit();
+					color: gray;
+				}
+				
+				.mv_num {
+					.mv_singer();
+					.mv_icon {
+						width: 20px;
+						height: 20px;
+						float: left;
+						margin-right: 5px;
+						background: white;
+					}
+				}
+			}
+		}
+
+		.slide_list {
+			width: 48%;
+			height: 200px;
+			background-color: white;
+		}
+	}
+
+	.slide_point {
+		width: 100%;
+		height: 80px;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	
+		.point {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background-color: rgba(0,0,0,0.3);
+		}
+	}
+
+	.slide_left {
+		height: 100%;
+		width: 50%;
+		position: absolute;
+		display: flex;
+		align-items: center;
+		top: 0;
+		.move {
+			width: 100px;
+			height: 140px;
+			background-color: rgba(0,0,0,0);
+			position: absolute;
+		}
+	}
+
+	.slide_right {
+		.slide_left();
+		right: 0;
+
+		.move {
+			right: 0;
+		}
+	}
+
+	
+}
+

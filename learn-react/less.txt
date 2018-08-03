@@ -1,0 +1,67 @@
+变量 @key:value;  
+
+(1)
+@key : banner;
+
+.@{key} {
+	styles...
+}
+↓
+
+.banner {
+	styles...
+}
+
+(2)
+@images: "../img";
+
+body {
+  color: #444;
+  background: url("@{images}/white-sand.png");
+}
+
+定义变量两次时，使用变量的最后一个定义，从当前范围向上搜索。
+这与css本身类似，其中定义中的最后一个属性用于确定值。
+
+使用$prop处理变量等属性
+
+
+————————————————————————————————————————————
+引用父选择器 &  [ &代表所有父选择器（不仅仅是最近的祖先）]
+(1)
+a {
+  color: blue;
+  &:hover {
+    color: green;
+  }
+}
+
+↓
+
+a {
+  color: blue;
+}
+
+a:hover {
+  color: green;
+}
+
+(2)用来产生重复的类名
+.button {
+	&-ok {}
+	&-cancle {}
+	&-custom {}
+}
+↓
+.button-ok {}
+.button-cancle {}
+.button-custom {}
+
+（3）更改选择器顺序
+
+——————————————————————————————————————————
+延伸 ：extend()
+
+混入 .class();  #id();
+
+不希望Mixin输出时 在mixin后面加括号

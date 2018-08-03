@@ -1,0 +1,172 @@
+路由
+
+不使用时 在state状态中存储当前路径 route : window.location.hash.substr(1)
+在生命周期componentDidMount中监听hashchange事件并给route重新置值  
+在render中根据route不同改变渲染不同页面
+
+URL的hash部分指的是#之后 
+
+使用后 
+import { Router, Route, Link } from 'react-router'
+将链接修改成<Link to="where">balabala</Link>
+{this.props.children} 即将渲染的部分
+最后用<Route>来渲染<Router>
+React.render((
+	<Router>
+		<Route path="/" component={App}>	//
+			<Route path="about" component={About}></Route>
+			<Route path="inbox" component={Inbox}></Route>
+		</Route>
+	</Router>
+),document.body)
+
+
+或者，
+
+const routes = {
+	path : '/',
+	component : App,
+	childRoutes : [
+		{ path: 'about', component: About},
+		{ path: 'inbox', component: Inbox}
+	]
+}
+
+React.render(<Router routes={routes} />, document.body)
+
+
+<Route path="message/:id" component={Message}>  带参
+
+默认页面IndexRoute 
+import { IndexRoute } from 'react-router'
+<IndexRoute component={xxx}/>	默认页面显示为xxx
+
+Redirect 重置路由
+<Redirect from"where" to="here"/>  from必须使用绝对路径
+
+onEnter onLeave 进入和离开时触发
+
+browserHistory 推荐 使用浏览器中的History API处理URL
+
+hashHistory 使用 URL 中的 hash（#）部分去创建形如 example.com/#/some/path 的路由
+
+————————————————————————————————————————————————
+
+动态路由
+getChildRoutes getIndexRoutes getComponents 异步执行 
+
+
+routerWillLeave 拦截正在发生的跳转 返回值为取消跳转（false）或者返回提示信息离开route前提示确认
+
+import { lifecycle } from 'react-router'
+
+路由外部跳转 browserHistory.push('/some/path')
+
+————————————————————————————————————————————————
+在路由组件中可以在this.props中获取params、routes等
+
+getComponent(location, cb)异步操作查找组件
+
+
+——————————————————————————————————————
+vue 4.0 从下开始
+
+将route组件化 写在React中
+
+三种类型的组件：路由器组件、路由匹配组件和导航组件
+
+从中导入Web应用程序中使用的所有组件 react-router-dom
+import{ BrowserRouter, Route, Link } from 'react-router-dom'
+
+——————————————————————————————————————————
+
+路由 ：
+
+对于Web项目，react-router-dom提供<BrowserRouter>和<HashRouter>路由器。
+
+这两个都将为您创建一个专门的history对象。
+
+当有一个响应服务器时 使用BrowserRouter ，当用到一个静态文件服务器时 使用HashRouter
+
+——————————————————————————————————————————
+
+路线匹配：
+
+<Route>和<Switch>
+
+当<Route>的path匹配了，将会渲染其中的内容，如果没匹配，则显示为null 
+
+ 一个没有path的Route将会总是match
+
+<Switch>是给一组 Route用的  对于一样的path它渲染第一匹配的内容->当没有匹配内容时可以在最后加404的Route
+
+replce属性 是否当前route替换前一个route
+——————————————————————————————————————————
+
+渲染Route的Props参数
+component、render和children   可以检查外部的Route 
+
+component 用于 在明确有component需要被渲染（React.Component 或者 functional component）
+render 内联函数方法 知应在必须将范围内变量传递给渲染组件时使用
+<Route exact path='/' component={Home} />
+<Route
+	path='/about'
+	render={(props) => <About {...props} extra={someVariable} />}
+/>
+
+——————————————————————————————————————————
+Navigation 导航：
+
+React router提供一个<Link>来创建连接，在HTML中会被<a>替代
+
+<NavLink>是<Link>的特殊类型 当它的to匹配了当前路径时 它可以将自己定型为active
+
+activeClassName:string 给导航栏选中添加样式
+activeStyle： string 直接写style
+isActive: func 激活时做的事情
+
+当要离开页面时做出提示
+<Prompt message={location => (
+  `Are you sue you want to go to ${location.pathname}?` 
+)} />
+——————————————————————————————————————————
+History : 
+
+location 当前的位置，将要去的位置，或是之前所在的位置
+
+在 Route component 中，以 this.props.location 获取
+
+在 Route render 中，以 ({location}) => () 方式获取
+
+在 Route children 中，以 ({location}) => () 方式获取
+
+在 withRouter 中，以 this.props.location 的方式获取
+
+
+
+match 包含Route path与URL匹配的信息 有params isExact path url属性
+
+在 Route component 中，以 this.props.match获取
+
+在 Route render 中，以 ({match}) => () 方式获取
+
+在 Route children 中，以 ({match}) => () 方式获取
+
+在 withRouter 中，以 this.props.match的方式获取
+
+
+matchPath 的返回值
+
+to 是绝对路径
+——————————————————————————————————————————
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+JSX 编译后转化为普通JavaScript对象 
+
+{js表达式} "字符串"   标签闭合式 />  跨行时用()
+
+JSX代表Objects 会被Bable转译器转成一个为React.createElement()的方法调用
+
+——————————————————————————————————————
+ReactDOM.render(
+	element,
+	rootNode
+)   渲染页面
+
+只更新必要部分
+
+
+——————————————————————————————————————
+定义组件：
+
+名称大写开头  组件返回值只能有一个根元素（同Vue）  组件之间相互独立  props只可读  数据自顶向下
+
+钩子函数：
+componentDidMount(){}	//挂载
+componentWillUnmount(){}	//卸载
+
+state  状态  异步更新
+使用setState()方法, 第二个参数为回调函数，即执行了修改后的函数
+
+setState({
+	key1 : val1,
+	key2 : val2
+})
+
+setState((pre, props){	//第一个参数为没更新之前的state  第二个为此时的props
+	key1 : val1,
+	key2 : val2	//需要更新什么就更新什么  其他的会原样保存  	
+})
+函数：
+function ElementA(props){
+	return ...
+}
+
+类：
+class ElementB extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {...};	//组件状态
+		this.function = this.function.bind(this);	//绑定this指向
+	}
+
+	functionA(){}	//方法
+
+	render(){	//真正渲染的部分
+		return ...
+	}
+}
+
+——————————————————————————————————————
+
+事件处理：
+
+命名使用驼峰式  使用JSX传入一个函数 onClick={methodA} 阻止默认事件仅为e.preventDefault()
+
+条件渲染 if-else A:B?C && ||  JSX中可以用js表达式  利用{   }
+
+列表渲染：
+
+1）使用数组  
+
+2）利用arr.map(val=>{      ||   （val, index） => {}
+	return (...)        
+})
+
+3）必须有key
+
+4）key不会被读取到   
+
+受控组件 ：
+
+指calue值存储在React组件的state中，需要手动指定onChange对应的handleChange方法即可实现（需要自己手动实现的双向传值）
+
+状态提升： 指一个状态可能同时被多用，提升到高层的state中，当做props传给低层级
+
+——————————————————————————————————————————————
+

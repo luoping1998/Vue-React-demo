@@ -6,191 +6,111 @@
 	<script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
 	<script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
 	<script src="https://cdn.bootcss.com/babel-standalone/6.26.0/babel.min.js"></script>
-	<style type="text/css">
-		.black {
-			color: black;
-		}
-		.red {
-			color: red;
-		}
-	</style>
 </head>
 <body>
-	<div id="root"></div>
-	<script type="text/babel">
-		const infor = [
-		  {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
-		  {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
-		  {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
-		  {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
-		  {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
-		  {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
-		];
-		
-		function onlyStock(infor) {
-			let arr = infor.filter((val)=>{
-				return val.stocked == true;
-			})
-			return arr;
-		}
-
-		function search(infors,val) {
-			if(val === '') {
-				return infor;
-			}
-
-			let arr = infors.filter(item=>{
-				return item.name.indexOf(val)!=-1
-			})
-
-			return arr;
-		}
-
-		class Infor extends React.Component {
-			constructor(props) {
-				super(props);
-				this.state = {
-					infor : this.props.infor,
-					value : '',
-					pre : this.props.infor
+	<div id="root">
+		<script type="text/babel">
+			class TodoList extends React.Component{
+				constructor(){
+					super();
+					this.state = {
+						value : '',
+						lists : []
+					};
+					this.handleClick = this.handleClick.bind(this);
+					this.handleChange = this.handleChange.bind(this);
+					this.handleDelete = this.handleDelete.bind(this);
 				}
-				this.handleChange = this.handleChange.bind(this);
-				this.handleClick = this.handleClick.bind(this);
-			}
 
-			handleChange(e) {
-				let val = e.target.value;
-				this.setState({
-					value : val
-				},()=>{
-					let arr = search(this.state.infor, val);
+				handleChange(e){
 					this.setState({
-						infor : arr
+						value : e.target.value
 					})
-				})
-			}
-
-			handleClick(e) {
-				if(e.target.checked){
-					let arr = onlyStock(this.state.infor);
-					this.setState((prev, props)=>({
-						infor : arr,
-						pre : prev.infor
-					}))
-				}else{
-					this.setState((props)=>({
-						infor : this.state.pre
-					}))
 				}
-			}
 
-			render(){
-				return(
-					<div>
-						<InfoHead 
-							value = {this.state.value} 
-							handleChange = {this.handleChange}
-							handleClick = {this.handleClick}
-						/>
-						<InfoBody infor = {this.state.infor} />
-					</div>
-				)
-			}
-		}
-
-		class InfoHead extends React.Component{
-			constructor(props) {
-				super(props);
-			}
-
-			render() {
-				return (
-					<div>
-						<input type="text" value={this.props.value} onChange={this.props.handleChange} placeholder="Search" />
-						<br/>
-						<input type="checkbox" onClick={this.props.handleClick} />Only show products in stock
-					</div>
-				)
-			}
-		}
-
-		class TabBody extends React.Component{
-			constructor(props) {
-				super(props);
-			}
-
-			render() {
-				const listItems = this.props.detiles.map((prop,index)=>{
-					return (
-						<tr key = {index}>
-							<td className={ prop.stocked == true ?'black':'red'}>{prop.name}</td>
-							<td>{prop.price}</td>
-						</tr>
-						)
-				})
-
-				return (
-					<tbody>
-						<tr><th>{this.props.title}</th></tr>
-						{listItems}
-					</tbody>
-				)
-
-			}
-		}
-
-		function splitClass(infors) {
-			let arr = [];
-			for( let i = 0;i < infors.length; i ++){
-				if(!arr.includes(infors[i].category)){
-					arr.push(infors[i].category);
+				handleClick(e){
+					this.setState({
+						lists : this.state.lists.concat(this.state.value)
+					},()=>{
+						this.setState({
+							value : ''
+						})
+					})
 				}
-			}
+				
+				handleDelete(e){
+					let index = Number(e.target.getAttribute('index'));
+					let arr = this.state.lists;
+					arr.splice(index,1);
+					this.setState({
+						lists : arr
+					})
+				}
 
-			let result = [];
-			for(let i = 0; i < arr.length; i ++){
-				let sarr = infors.filter(val=>{
-					return val.category === arr[i];
-				})
-				result.push(sarr);
-			}
-			return result;
-		}
-
-		class InfoBody extends React.Component{
-			constructor(props) {
-				super(props);
-			}
-			
-			render() {
-				const arr = splitClass(this.props.infor);
-				const Lists = arr.map((val,index)=>{
+				render(){
 					return (
-						<TabBody 
-							key={index} 
-							title={val[0].category} 
-							detiles={val}
+						<div>
+							<ListHead 
+								value={this.state.value} 
+								handleClick={this.handleClick} 
+								handleChange={this.handleChange}
 							/>
-						)
-				})
-				return (
-					(
-					<table>
-						<tr>
-							<th>Name</th>
-							<th>Price</th>
-						</tr>
-						{Lists}
-					</table>
+							<ListBody 
+								lists={this.state.lists} 
+								handleDelete={this.handleDelete}
+							/>
+						</div>
 					)
-				)
+				}
 			}
-		}
 
-		ReactDOM.render(
-			<Infor infor={infor} />,
-			document.getElementById('root')
-		)
-	</script>
+			class ListHead extends React.Component{
+				constructor(props){
+					super(props);
+				}
+
+				render() {
+					return (
+						<div>
+							<input 
+								type="text" 
+								value={this.props.value} 
+								onChange={this.props.handleChange}
+							/>
+							<button onClick={this.props.handleClick}>添加</button>
+						</div>
+					)
+				}
+			}
+
+			class ListBody extends React.Component{
+				constructor(props){
+					super(props);
+				}
+
+				render(){
+					const items = this.props.lists.map((item, index)=>{
+						return (
+							<li key={index}>
+								{item}  
+								<button onClick={this.props.handleDelete} index={index}> 删除 </button>
+							</li>
+						)
+					})
+
+					return (
+						<ul>
+							{items}
+						</ul>
+					)
+				}
+			}
+
+			ReactDOM.render(
+				<TodoList />,
+				document.getElementById('root')
+			)
+		</script>
+	</div>
 </body>
 </html>

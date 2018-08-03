@@ -1,0 +1,35 @@
+JSX  是 React.createElement(componet, props. ...children)的语法糖
+
+大写开头JSX标签标示一个React组件   使用先得声明
+
+React必须声明  点表示法  把小写开头的理解为原声标签  大写才表示命名组件
+
+不能使用表达式座位React元素的！标签！如果想通过表达式确定类型，应先赋值给大写开头的变量
+
+JSX{}中可：
+1）使用js表达式
+
+2）字符串常量  加引号（无意义）
+
+3）不传值则默认为True
+
+4）扩展属性  使用...传递整个属性对象，例如：
+function App2() {
+  const props = {firstName: 'Ben', lastName: 'Hector'};
+  return <Greeting {...props} />;
+	//等同于手动全部赋值
+}
+
+子代 ：props.children
+ 
+布尔值、Null 和 Undefined 被忽略  false、null、undefined 和 true 都是有效的子代，但它们不会直接被渲染。 
+
+在{}渲染时确保为布尔值
+
+JSX 会移除空行和开始与结尾处的空格。
+
+————————————————————————————————————————
+
+PropTypes类型检查  
+
+Refs 
